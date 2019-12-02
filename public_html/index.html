@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ScenePlayer</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="sceneplayer.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+
+            var _manager = new ScenePlayer();
+            
+            //_manager.director().add('luna-char','LunaChar48x96.png',4,3,48,96);
+            _manager.addMedia('croak_01.wav')
+                .addMedia('croak_02.wav')
+                .addMedia('croak_03.wav')
+                .addMedia('croak_04.wav')
+                .addMedia('croak_05.wav')
+                .addMedia('croak_06.wav');
+
+            _manager.testSound( );
+
+        </script>
+        <div id="sceneplayer">
+        
+        
+        </div>
+    </body>
+</html>
