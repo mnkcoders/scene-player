@@ -36,13 +36,9 @@ function ScenePlayer( id ){
         'media':[]
     };
     /**
-     * @type SceneDirector
+     * @type SceneLoader
      */
-    var _director = new SceneDirector();
-    /**
-     * @returns {SceneDirector}
-     */
-    this.director = function(){ return _director; };
+    var _loader = new SceneLoader();
     /**
      * @param {Audio|String} media
      * @returns {ScenePlayer}
@@ -62,18 +58,27 @@ function ScenePlayer( id ){
         }
         
         return this;
-    }
+    };
     /**
      * @param {Sprite} sprite
      * @returns {ScenePlayer}
      */
-    this.addSprite = function( sprite ){
+    this.addSprite = function( setup ){
 
-        if( sprite instanceof Sprite ){
+        var sprite = new Sprite({
+            'name': typeof setup.name === 'string' ? setup.name : 'New Sprite',
+            'src': typeof setup.src === 'string' ? setup.src : '',
+            'rows': typeof setup.rows === 'number' ? setup.rows : 0,
+            'cols': typeof setup.cols === 'number' ? setup.cols : 0,
+            'width': typeof setup.width === 'number' ? setup.width : 0,
+            'height': typeof setup.height === 'number' ? setup.height : 0,
+            'time': typeof setup.time === 'number' ? setup.time : 100
+        });
         
+        if( sprite.validate() ){
             _MANAGER.sprites.push(sprite);
         }
-
+        
         return this;
     };
     /**
@@ -101,6 +106,18 @@ function ScenePlayer( id ){
             }
         }
         return this;
+    };
+    /**
+     * @param {Number|String} sprite_id
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {ScenePlayer}
+     */
+    this.testSprite = function( sprite_id , x , y ){
+        
+        
+        
+       return this; 
     };
     /**
      * @param {Number} media_id
@@ -142,16 +159,35 @@ function ScenePlayer( id ){
         
         _MANAGER.sprites.forEach( function(sprite){
             
+            // Clear the canvas
+            _MANAGER.display.clearRect(0,0,_MANAGER.display.width,_MANAGER.display.height);
+            //display
             _MANAGER.display.drawImage(
-                    sprite.image()
-                    );
-                
-            
+		    sprite.image(),
+		    sprite.frameId() * sprite.width() / sprite.frameCount(),
+		    0,
+		    sprite.width() / sprite.frameCount(),
+		    sprite.height(),
+		    0,
+		    0,
+		    sprite.width() / sprite.frameCount(),
+		    sprite.height());
+
         });
         
         return this;
     };
-    
+    /**
+     * 
+     * @returns {ScenePlayer}
+     */
+    this.resize = function(){
+        _MANAGER.canvas.width = _MANAGER.container.offsetWidth;
+
+        _MANAGER.canvas.height = _MANAGER.container.offsetHeight;
+        
+        return this;
+    };
     /**
      * @returns {ScenePlayer}
      */
@@ -159,19 +195,9 @@ function ScenePlayer( id ){
 
         _MANAGER.sprites.forEach(function (spr) {
             //console.log(spr);
-            _MANAGER.container.appendChild(spr.image());
+            //_MANAGER.container.appendChild(spr.image());
         });
-        
-        _MANAGER.canvas = document.createElement('canvas');
-        
-        _MANAGER.canvas.width = _MANAGER.container.width;
 
-        _MANAGER.canvas.height = _MANAGER.container.height;
-        
-        _MANAGER.canvas.image = new Image();
-        
-        _MANAGER.display = _MANAGER.canvas.getContext('2d');
-        
 
         return this;
     };
@@ -189,12 +215,16 @@ function ScenePlayer( id ){
             
             _MANAGER.container = document.getElementById(_MANAGER.id);
             
-            _director.dictionary().forEach( function(spr){
-                _MANAGER.sprites.push( new Sprite( spr ) );
-            });
+            _MANAGER.canvas = document.createElement('canvas');
+
+            _controller.resize();
+
+            _MANAGER.display = _MANAGER.canvas.getContext('2d');
+
+            _MANAGER.container.appendChild(_MANAGER.canvas);
+
 
             //console.log(_MANAGER.sprites);
-            
             _controller.load();
         });
         
@@ -204,9 +234,9 @@ function ScenePlayer( id ){
     return this.init();
 }
 /**
- * @returns {SceneDirector}
+ * @returns {SceneLoader}
  */
-function SceneDirector(){
+function SceneLoader(){
     /**
      * @type Array
      */
@@ -218,7 +248,7 @@ function SceneDirector(){
      * @param {String} src
      * @param {Number} cols
      * @param {Number} rows
-     * @returns {SceneDirector}
+     * @returns {SceneLoader}
      */
     this.add = function( path, src, cols, rows, width, height){
         _collection.push({
@@ -254,6 +284,24 @@ function Event(){
 }
 /**
  * 
+ * @param {Number} x
+ * @param {Number} y
+ * @returns {Vector}
+ */
+function Vector( x , y ){
+    
+    this.x = typeof x === 'number' ? x : 0;
+    
+    this.y = typeof y === 'number' ? y : 0;
+}
+/**
+ * 
+ * @returns {Vector}
+ */
+Vector.Zero = (function(){ return new Vector(0,0); })();
+Object.freeze(Vector.Zero);
+/**
+ * 
  * @param {type} setup
  * @returns {Sprite}
  */
@@ -261,21 +309,34 @@ function Sprite( setup ){
     
     var _sprite = {
         'src': typeof setup.src === 'string' ? setup.src : '',
-        'rows': typeof setup.rows === 'number' ? setup.rows : 0,
-        'cols': typeof setup.cols === 'number' ? setup.cols : 0,
+        'rows': typeof setup.rows === 'number' ? setup.rows : 1,
+        'cols': typeof setup.cols === 'number' ? setup.cols : 1,
         'width': typeof setup.width === 'number' ? setup.width : 0,
         'height': typeof setup.height === 'number' ? setup.height : 0,
         'name': typeof setup.name === 'string' ? setup.name : 'New Sprite',
-        'time': typeof setup.time === 'number' ? setup.time : 100,
+        //sprite runtime properties
+        'ticks': typeof setup.time === 'number' ? setup.time : 100,
+        //frame collection (columns and rows)
+        'frames': [],
+        //frame index
+        'frame_id': 0,
+        'position': Vector.Zero,
         /**
          * @type Image
          */
         'image': null
     };
     /**
+     * @returns {Boolean}
+     */
+    this.validate = function(){
+        
+        return _sprite.src.length && _sprite.name.length;
+    };
+    /**
      * @returns {Image}
      */
-    this.init = function(){
+    this.load = function(){
         
         _sprite.image = new Image( _sprite.width , _sprite.height );
         
@@ -287,14 +348,22 @@ function Sprite( setup ){
      * @returns {Number}
      */
     this.width = function(){
-        return 0;
+        return _sprite.width;
     };
     /**
      * @returns {Number}
      */
     this.height = function(){
-        return 0;
+        return _sprite.height;
     };
+    /**
+     * @returns {Number}
+     */
+    this.cols = function(){ return _sprite.cols; };
+    /**
+     * @returns {Number}
+     */
+    this.rows = function(){ return _sprite.rows; };
     /**
      * @returns {Number}
      */
@@ -302,13 +371,29 @@ function Sprite( setup ){
         return 0;
     };
     /**
+     * @returns {Number}
+     */
+    this.frameId = function(){ return _sprite.frame_id;  };
+    /**
+     * @returns {Number}
+     */
+    this.ticks = function(){ return _sprite.ticks; };
+    /**
+     * @returns {Number}
+     */
+    this.frameCount = function(){ return _sprite.frames.length; };
+    /**
+     * @returns {Vector}
+     */
+    this.position = function(){ return _sprite.position; };
+    /**
      * @returns {Image}
      */
     this.image = function(){
         return _sprite.image;
     };
     
-    return this.init();
+    return this;
 }
 /**
  * @param {Object} params
