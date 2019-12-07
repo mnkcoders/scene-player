@@ -23,7 +23,13 @@
                 cursor: pointer;
             }
         </style>
-        <script type="text/javascript" src="sceneplayer.js"></script>
+        <script type="text/javascript" src="lib/sceneplayer.js"></script>
+        <script type="text/javascript" src="lib/database.js"></script>
+        <script type="text/javascript" src="lib/scene.js"></script>
+        <script type="text/javascript" src="lib/events.js"></script>
+        <script type="text/javascript" src="lib/sprite.js"></script>
+        <script type="text/javascript" src="lib/sfx.js"></script>
+        <script type="text/javascript" src="lib/elements.js"></script>
     </head>
     <body>
         <script type="text/javascript">
@@ -39,17 +45,20 @@
                 .addMedia('croak_06.wav')
                 //.addImage('gate-1.png')
                 .addImage('frog-1.png')
-                .addSprite({
+                .createSprite({
                     'image':'frog-1.png',
                     'name':'Mr. Frog',
                     'rows':4,'cols':3,
                     'width':144,'height':192,
                     'frames':[0,1,2],
-                    'speed': 4
                 });
 
-            _manager.testSprite(0,100,100, 4 );
-
+            _manager
+                    .addSprite(0, Vector.Random , 1, 'random' )
+                    .addSprite(0, Vector.Random , 2, 'random' )
+                    .addSprite(0, Vector.Random , 1,  'random' )
+                    .addSprite(0, Vector.Random , 0.8,  'random' );
+            
         </script>
         <div id="sceneplayer">
             
