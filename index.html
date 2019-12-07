@@ -37,12 +37,14 @@
             var _manager = new ScenePlayer();
             
             //_manager.director().add('luna-char','LunaChar48x96.png',4,3,48,96);
-            _manager.addMedia('croak_01.wav')
+            _manager.addMedia('completed_1.wav')
+                .addMedia('croak_01.wav')
                 .addMedia('croak_02.wav')
                 .addMedia('croak_03.wav')
                 .addMedia('croak_04.wav')
                 .addMedia('croak_05.wav')
                 .addMedia('croak_06.wav')
+                .addSoundBank('frog',[1,2,3,4,5,6])
                 //.addImage('gate-1.png')
                 .addImage('frog-1.png')
                 .createSprite({
@@ -53,12 +55,17 @@
                     'frames':[0,1,2],
                 });
 
-            _manager
-                    .addSprite(0, Vector.Random , 1, 'random' )
-                    .addSprite(0, Vector.Random , 2, 'random' )
-                    .addSprite(0, Vector.Random , 1,  'random' )
-                    .addSprite(0, Vector.Random , 0.8,  'random' );
-            
+            for( var i = 0 ; i < parseInt(Math.random() * 40 ) + 5 ; i++ ){
+
+                _manager.addSprite( 0 ,
+                    //starting position
+                    Vector.Random( 600 ).absolute() ,
+                    //scale
+                    parseFloat( (Math.random() * 2).toFixed(2) ) + 1,
+                    //speed
+                    Vector.Random( 10 ) );
+            }
+
         </script>
         <div id="sceneplayer">
             
