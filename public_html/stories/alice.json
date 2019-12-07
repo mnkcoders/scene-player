@@ -1,0 +1,17 @@
+{
+    "author_name": "JayaKun",
+    "title":"Alice",
+    "bitmaps": [],
+    "media": [],
+    "sprites": [],
+    "scenes":[
+        {"First":{
+                "events":[
+                    {}
+                ],
+                "sprites":[
+                    
+                ]
+        }}
+    ]
+}

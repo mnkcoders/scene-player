@@ -19,6 +19,8 @@
                 height: 100%;
                 background-color: #fff;
                 box-shadow: 0 0 8px rgba(0,0,0,0.4);
+                
+                cursor: pointer;
             }
         </style>
         <script type="text/javascript" src="sceneplayer.js"></script>
@@ -35,10 +37,18 @@
                 .addMedia('croak_04.wav')
                 .addMedia('croak_05.wav')
                 .addMedia('croak_06.wav')
-                .addImage('gate-1.png')
-                .addSprite({'name':'Door','src':'gate-1.png','rows':4,'cols':3,'width':432,'height':384});
+                //.addImage('gate-1.png')
+                .addImage('frog-1.png')
+                .addSprite({
+                    'image':'frog-1.png',
+                    'name':'Mr. Frog',
+                    'rows':4,'cols':3,
+                    'width':144,'height':192,
+                    'frames':[0,1,2],
+                    'speed': 4
+                });
 
-            _manager.testSound( ).testSprite(0,100,100);
+            _manager.testSprite(0,100,100, 4 );
 
         </script>
         <div id="sceneplayer">
