@@ -34,10 +34,9 @@
     <body>
         <script type="text/javascript">
 
-            var _manager = new ScenePlayer();
+            var GAME = new ScenePlayer();
             
-            //_manager.director().add('luna-char','LunaChar48x96.png',4,3,48,96);
-            _manager.addMedia('completed_1.wav')
+            GAME.addMedia('completed_1.wav')
                 .addMedia('croak_01.wav')
                 .addMedia('croak_02.wav')
                 .addMedia('croak_03.wav')
@@ -52,12 +51,12 @@
                     'name':'Mr. Frog',
                     'rows':4,'cols':3,
                     'width':144,'height':192,
-                    'frames':[0,1,2],
+                    'frames':[0,1,2]
                 });
 
             for( var i = 0 ; i < parseInt(Math.random() * 40 ) + 5 ; i++ ){
 
-                _manager.addSprite( 0 ,
+                GAME.addSprite( 0 ,
                     //starting position
                     Vector.Random( 600 ).absolute() ,
                     //scale
@@ -69,7 +68,7 @@
         </script>
         <div id="sceneplayer">
             
-            
+            <!-- LOAD THE CANVAS HERE -->
         
         </div>
     </body>
