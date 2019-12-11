@@ -56,17 +56,19 @@
                 });
                 
                 //console.log(GAME.DB().dump());
-                
-            for( var i = 0 ; i < parseInt(Math.random() * 40 ) + 5 ; i++ ){
 
-                GAME.addSprite( 0 ,
-                    //starting position
-                    Vector.Random( 600 ).absolute() ,
-                    //scale
-                    parseFloat( (Math.random() * 2).toFixed(2) ) + 1,
-                    //speed
-                    Vector.Random( 10 ) );
-            }
+            document.addEventListener( 'DOMContentLoaded', function(){
+                for( var i = 0 ; i < parseInt(Math.random() * 40 ) + 5 ; i++ ){
+
+                    GAME.addSprite( 0 ,
+                        //starting position
+                        Vector.Random( GAME.Renderer().width() , GAME.Renderer().height() ).absolute() ,
+                        //scale
+                        parseFloat( (Math.random() * 2).toFixed(2) ) + 1,
+                        //speed
+                        Vector.Random( 10 ) );
+                }
+            });
 
         </script>
         <div id="sceneplayer">
