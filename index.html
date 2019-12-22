@@ -23,16 +23,12 @@
                 cursor: pointer;
             }
         </style>
-        <script type="text/javascript" src="lib/sceneplayer.js"></script>
-        <script type="text/javascript" src="lib/database.js"></script>
-        <script type="text/javascript" src="lib/scene.js"></script>
-        <script type="text/javascript" src="lib/events.js"></script>
-        <script type="text/javascript" src="lib/sprite.js"></script>
-        <script type="text/javascript" src="lib/sfx.js"></script>
-        <script type="text/javascript" src="lib/elements.js"></script>
     </head>
     <body>
-        <script type="text/javascript">
+        <script type="module">
+            
+            import {ScenePlayer} from './lib/sceneplayer.js';
+            import {Vector} from './lib/elements.js';
 
             var GAME = new ScenePlayer();
             
@@ -45,7 +41,6 @@
                 .addMedia('croak_05.wav')
                 .addMedia('croak_06.wav')
                 .addSoundBank('frog',[1,2,3,4,5,6])
-                //.addImage('gate-1.png')
                 .addImage('frog-1.png')
                 .addSprite({
                     'image':'frog-1.png',
@@ -54,6 +49,8 @@
                     'width':144,'height':192,
                     'frames':[0,1,2]
                 });
+                
+            GAME.DB().load( 'test' );
 
             document.addEventListener( 'DOMContentLoaded', function(){
             
